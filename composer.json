@@ -1,0 +1,16 @@
+{
+    "name": "ry/categories",
+    "description": "categorizable items",
+    "type": "php, laravel 5",
+    "authors": [
+        {
+            "name": "Landr Kotoarivelo",
+            "email": "landr@topmora.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    	"mcamara/laravel-localization": "*",
+    	"baum/baum": "*"
+    }
+}
