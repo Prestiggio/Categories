@@ -11,7 +11,7 @@
     "require": {
     	"mcamara/laravel-localization": "*",
     	"baum/baum": "*"
-    }
+    },
     "autoload": {
         "psr-4": {
             "Ry\\Categories\\": "src/"
