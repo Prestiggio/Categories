@@ -1,6 +1,6 @@
 <?php
 
-namespace Ry\RealEstate\Console\Commands;
+namespace Ry\Categories\Console\Commands;
 
 use Illuminate\Console\Command;
 use Ry\Categories\Models\Categorie;
