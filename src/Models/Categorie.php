@@ -11,7 +11,7 @@ class Categorie extends Node {
 	 *
 	 * @var string
 	 */
-	protected $table = 'categories';
+	protected $table = 'ry_categories_categories';
 	
 	protected $visible = ["id", "term", "active"];
 	

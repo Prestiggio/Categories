@@ -12,7 +12,7 @@ class Categorygroups extends Migration
      */
     public function up()
     {
-        Schema::create('categorygroups', function (Blueprint $table) {
+        Schema::create('ry_categories_categorygroups', function (Blueprint $table) {
             $table->increments('id');
             $table->char("name");
             $table->timestamps();
@@ -26,6 +26,6 @@ class Categorygroups extends Migration
      */
     public function down()
     {
-        Schema::drop('categorygroups');
+        Schema::drop('ry_categories_categorygroups');
     }
 }

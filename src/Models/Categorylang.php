@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categorylang extends Model
 {
-	protected $table = "categorylangs";
+	protected $table = "ry_categories_categorylangs";
 	
 	private $fallback = "en";
 	

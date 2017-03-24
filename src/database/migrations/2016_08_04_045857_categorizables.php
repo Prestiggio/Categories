@@ -12,7 +12,7 @@ class Categorizables extends Migration
      */
     public function up()
     {
-        Schema::create('categorizables', function (Blueprint $table) {
+        Schema::create('ry_categories_categorizables', function (Blueprint $table) {
             $table->increments('id');
             $table->integer("categorie_id", false, true);
             $table->char("categorizable_type")->nullable();
@@ -28,6 +28,6 @@ class Categorizables extends Migration
      */
     public function down()
     {
-        Schema::drop('categorizables');
+        Schema::drop('ry_categories_categorizables');
     }
 }

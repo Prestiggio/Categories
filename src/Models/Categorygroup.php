@@ -5,5 +5,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categorygroup extends Model
 {
-	protected $table = "categorygroups";
+	protected $table = "ry_categories_categorygroups";
 }

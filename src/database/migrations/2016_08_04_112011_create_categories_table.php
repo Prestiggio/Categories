@@ -11,7 +11,7 @@ class CreateCategoriesTable extends Migration {
    * @return void
    */
   public function up() {
-    Schema::create('categories', function(Blueprint $table) {
+    Schema::create('ry_categories_categories', function(Blueprint $table) {
       $table->increments('id');
       $table->integer("categorygroup_id", false, true);
       $table->integer('parent_id')->nullable()->index();
@@ -29,7 +29,7 @@ class CreateCategoriesTable extends Migration {
    * @return void
    */
   public function down() {
-    Schema::drop('categories');
+    Schema::drop('ry_categories_categories');
   }
 
 }
