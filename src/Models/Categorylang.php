@@ -11,7 +11,7 @@ class Categorylang extends Model
 	
 	protected $fillable = ["user_id", "path", "name", "descriptif", "lang"];
 	
-	protected $visible = ["name", "link", "tree"];
+	protected $visible = ["id", "name", "link", "tree"];
 	
 	protected $appends = ["tree", "link"];
 	

@@ -15,8 +15,8 @@ class Categorizables extends Migration
         Schema::create('ry_categories_categorizables', function (Blueprint $table) {
             $table->increments('id');
             $table->integer("categorie_id", false, true);
-            $table->char("categorizable_type")->nullable();
-            $table->integer("categorizable_id", false, true)->nullable();
+            $table->char("ry_categories_categorizable_type")->nullable();
+            $table->integer("ry_categories_categorizable_id", false, true)->nullable();
             $table->timestamps();
         });
     }
