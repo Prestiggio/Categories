@@ -19,6 +19,8 @@ class CreateCategoriesTable extends Migration {
       $table->integer('rgt')->nullable()->index();
       $table->integer('depth')->nullable();
       $table->boolean("active");
+      $table->boolean('multiple');
+      $table->char("input"); //mety ho tag special ra ajax <ville></ville>
       $table->timestamps();
     });
   }

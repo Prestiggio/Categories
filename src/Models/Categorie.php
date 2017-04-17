@@ -3,8 +3,13 @@ namespace Ry\Categories\Models;
 
 use Baum\Node;
 use LaravelLocalization;
+use Ry\Medias\Models\Traits\MediableTrait;
+use Ry\Caracteres\Models\Traits\RankableTrait;
+use Ry\Medias\Models\Media;
 
 class Categorie extends Node {
+	
+	use MediableTrait, RankableTrait;
 	
 	/**
 	 * Table name.
@@ -60,5 +65,19 @@ class Categorie extends Node {
 	
 	public function terms() {
 		return $this->hasMany("Ry\Categories\Models\Categorylang", "categorie_id");
+	}
+	
+	public function getIconAttribute() {
+		if($this->medias->count()>0)
+			return $this->medias;
+	
+		$parent = $this->parent();
+		if($parent->exists())
+			return $parent->first()->getIconAttribute();
+	
+		$media = new Media();
+		$media->type = "image";
+		$media->path = "ico_autre.png";
+		return [$media];
 	}
 }
