@@ -27,7 +27,7 @@ class PublicJsonController extends Controller
 	private function createCategorie($name, $input, $descriptif = "", $lang = null) {
 		$user_id = 1;
 		if (! $lang)
-			$lang = LaravelLocalization::getCurrentLocale ();
+			$lang = "fr";
 	
 		$categorie = $this->group->categories()->create ( [
 				"active" => 1,
