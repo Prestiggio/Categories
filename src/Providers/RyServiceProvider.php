@@ -2,14 +2,14 @@
 
 namespace Ry\Categories\Providers;
 
-//use Illuminate\Support\ServiceProvider;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 
 use Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider;
 use Baum\Providers\BaumServiceProvider;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Ry\Categories\Models\Categorylang;
+use Ry\Categories\Models\Categorie;
 
 class RyServiceProvider extends ServiceProvider
 {
@@ -18,13 +18,9 @@ class RyServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
-    	parent::boot($router);
-    	
-    	$router->bind("category", function($value){
-    		return Categorylang::where("path", "=", $value)->first()->category;
-    	});
+    	parent::boot();
     	
     	/*
     	$this->publishes([    			
@@ -54,6 +50,17 @@ class RyServiceProvider extends ServiceProvider
     			__DIR__.'/../database/factories/' => database_path('factories'),
 	        	__DIR__.'/../database/migrations/' => database_path('migrations')
 	    ], 'migrations');
+    	
+    	$this->map();
+    	
+    	$this->app["router"]->bind("category", function($value){
+    		return Categorylang::where("path", "=", $value)->first()->category;
+    	});
+    	
+    	Categorie::saved(function($category){
+    		foreach ($category->terms as $term)
+    			$term->makepath();
+    	});
     }
 
     /**
@@ -70,10 +77,10 @@ class RyServiceProvider extends ServiceProvider
         $loader->alias('LaravelLocalization', LaravelLocalization::class);
     }
     
-    public function map(Router $router)
+    public function map()
     {    	
     	if (! $this->app->routesAreCached()) {
-    		$router->group(['namespace' => 'Ry\Categories\Http\Controllers'], function(){
+    		$this->app["router"]->group(['namespace' => 'Ry\Categories\Http\Controllers'], function(){
     			require __DIR__.'/../Http/routes.php';
     		});
     	}

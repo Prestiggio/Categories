@@ -8,9 +8,9 @@ class Categorizable extends Model
 {
 	protected $table = "ry_categories_categorizables";
 	
-	protected $fillable = ["categorie_id"];
+	protected $fillable = ["categorie_id", "main"];
 	
-	protected $visible = ["id", "category"];
+	protected $visible = ["id", "category", "main"];
 	
 	protected $with = ["category"];
 	
