@@ -71,7 +71,7 @@ class RyServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(LaravelLocalizationServiceProvider::class);     
-        $this->app->register(BaumServiceProvider::class);   
+        $this->app->register(BaumServiceProvider::class);
         
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('LaravelLocalization', LaravelLocalization::class);

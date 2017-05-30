@@ -80,4 +80,12 @@ class Categorie extends Node {
 		$media->path = "ico_autre.png";
 		return [$media];
 	}
+	
+	public function getRouteKeyName() {
+		return "slug";
+	}
+	
+	public function getSlugAttribute() {
+		return $this->term->path;
+	}
 }
