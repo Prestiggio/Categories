@@ -18,9 +18,7 @@ class Categorie extends Node {
 	 */
 	protected $table = 'ry_categories_categories';
 	
-	protected $visible = ["id", "term", "active"];
-	
-	protected $with = ["term"];
+	protected $hidden = ["parent_id", "depth", "categorygroup_id", "multiple", "input", "created_at", "updated_at"];
 	
 	// protected $orderColumn = null;
 	
@@ -87,5 +85,12 @@ class Categorie extends Node {
 	
 	public function getSlugAttribute() {
 		return $this->term->path;
+	}
+	
+	public function newQueryWithoutScopes() {
+		if(!in_array("term", $this->with))
+			$this->with[] = "term";
+		
+		return parent::newQueryWithoutScopes();
 	}
 }
