@@ -93,4 +93,8 @@ class Categorie extends Node {
 		
 		return parent::newQueryWithoutScopes();
 	}
+	
+	public function group() {
+		return $this->belongsTo("Ry\Categories\Models\Categorygroup", "categorygroup_id");
+	}
 }

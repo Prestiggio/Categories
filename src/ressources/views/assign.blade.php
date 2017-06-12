@@ -13,6 +13,9 @@
 						<label>Nom</label>
 						<input type="text" ng-model="child.term.name" required/>
 					</md-input-container>
+					<md-input-container>
+						<md-radio-button ng-value="child" aria-label="@{{child.term.name}}">Par défaut</md-radio-button>
+					</md-input-container>
 				</div>
 				<md-button class="md-icon-button" ng-click="child.deleted=true" aria-label="@lang("rycategories::overall.removechild")"><md-icon md-font-icon="fa fa-minus-circle"></md-icon></md-button>
 				<md-button class="md-icon-button" ng-click="addChild(child)" aria-label="@lang("rycategories::overall.addchild")"><md-icon md-font-icon="fa fa-plus-circle"></md-icon></md-button>
