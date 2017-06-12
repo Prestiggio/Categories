@@ -8,4 +8,8 @@ class PublicController extends Controller
 	public function getCategory($category) {
 		return $category;
 	}
+	
+	public function getEdit() {
+		return view("rycategories::edit");
+	}
 }
