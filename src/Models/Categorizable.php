@@ -52,4 +52,26 @@ class Categorizable extends Model
 		
 		return $ar;
 	}
+	
+	public static function byName($q, $cast, $notIn = [], $in = []) {
+		$ar = [];
+		$results = app("rymd.search")->search("categorie", $q);
+		foreach($results as $categories) {
+			foreach($categories as $categorie) {
+				$ar[$categorie->categorie_id] = $categorie;
+			}
+		}
+		$query = Categorizable::whereIn("categorie_id", array_keys($ar))->where("categorizable_type", "=", $cast);
+		if(count($notIn)>0)
+			$query->whereNotIn("categorizable_id", $notIn);
+		if(count($in)>0)
+			$query->whereIn("categorizable_id", $in);
+		
+		$cats = $query->get();
+		$ar = [];
+		foreach($cats as $cat)
+			$ar[] = $cat->categorizable;
+		
+		return $ar;
+	}
 }
