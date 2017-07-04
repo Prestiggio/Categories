@@ -19,6 +19,8 @@ class Categorie extends Node {
 	protected $table = 'ry_categories_categories';
 	
 	protected $hidden = ["parent_id", "depth", "categorygroup_id", "multiple", "input", "created_at", "updated_at"];
+
+	protected $fillable = ["active", "multiple", "input"];
 	
 	// protected $orderColumn = null;
 	
