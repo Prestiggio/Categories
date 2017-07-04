@@ -9,6 +9,8 @@ use Auth;
 
 class AdminController extends Controller
 {
+	private $categorizable;
+	
 	public function __construct() {
 		$this->middleware("admin");
 	}
@@ -83,8 +85,10 @@ class AdminController extends Controller
 		}
 	}
 	
-	public function attributeCategories(&$categorizable, $ar, $parent = null, $lang = null) {
+	public function attributeCategories($categorizable, $ar, $parent = null, $lang = null) {
 		$user = Auth::user ();
+		
+		$this->categorizable = $categorizable;
 	
 		if (! $lang)
 			$lang = "fr";
@@ -92,7 +96,7 @@ class AdminController extends Controller
 		foreach ( $ar as $a ) {
 			if (isset ( $a ["deleted"] ) && $a ["deleted"] == true) {
 				if (isset ( $a ["id"] )) {
-					$categorizable->categories ()->detach ( $a ["id"] );
+					$this->categorizable->categories ()->detach ( $a ["id"] );
 				}
 				continue;
 			}
@@ -116,12 +120,12 @@ class AdminController extends Controller
 			}
 				
 			if (isset ( $a ["selected"] ) && $a ["selected"] == true) {
-				$categorizable->categories ()->create ([
+				$this->categorizable->categories ()->create ([
 						"categorie_id" => $p->id
 				]);
 			}
 				
-			$this->attributeCategories ($categorizable,  $a ["children"], $p );
+			$this->attributeCategories ($this->categorizable,  $a ["children"], $p );
 		}
 	}
 }
