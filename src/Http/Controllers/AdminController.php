@@ -104,25 +104,42 @@ class AdminController extends Controller
 			$p = null;
 			if (isset ( $a ["id"] ))
 				$p = Categorie::where ( "id", "=", $a ["id"] )->first ();
-			elseif (isset ( $a ["tempid"] ) && $parent) {
-				$p = $parent->group->categories ()->create ( [
-						"active" => 1,
-						"multiple" => 1,
-						"input" => "text"
-				] );
-				$p->terms ()->create ( [
-						"user_id" => $user->id,
-						"lang" => $lang,
-						"name" => $a ["term"] ["name"]
-				] );
-				$p->makeChildOf ( $parent );
+			elseif (isset ( $a ["tempid"] )) {
+				if($parent) {
+					$p = $parent->group->categories ()->create ( [
+							"active" => 1,
+							"multiple" => 1,
+							"input" => "text"
+					] );
+					$p->terms ()->create ( [
+							"user_id" => $user->id,
+							"lang" => $lang,
+							"name" => $a ["term"] ["name"]
+					] );
+					$p->makeChildOf ( $parent );
+				}
+				else {
+					$p = Categorygroup::where("id", "=", 1)->first()->categories()->create ( [
+							"active" => 1,
+							"multiple" => 1,
+							"input" => "text"
+					] );
+					$p->terms ()->create ( [
+							"user_id" => $user->id,
+							"lang" => $lang,
+							"name" => $a ["term"] ["name"]
+					] );
+				}
 				$p->save ();
 			}
 				
 			if (isset ( $a ["selected"] ) && $a ["selected"] == true) {
-				$this->categorizable->categories ()->create ([
-						"categorie_id" => $p->id
-				]);
+				$cz = $this->categorizable->categories ()->where("categorie_id", "=", $p->id);
+				if(!$cz->exists()) {
+					$this->categorizable->categories ()->create ([
+							"categorie_id" => $p->id
+					]);
+				}
 			}
 				
 			$this->attributeCategories ($this->categorizable,  $a ["children"], $p );
