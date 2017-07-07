@@ -23,8 +23,13 @@ class AdminController extends Controller
 		return view("rycategories::edit");
 	}
 	
-	public function getCategories() {
-		$roots = Categorie::roots ()->get ();
+	public function getCategories($notIn = []) {
+		if(count($notIn)>0) {
+			$roots = Categorie::roots ()->whereNotIn("id", $notIn)->get ();
+		}
+		else {
+			$roots = Categorie::roots ()->get ();
+		}
 		$ar = [ ];
 		foreach ( $roots as $root ) {
 			$obj = $root->getDescendantsAndSelf ()->toHierarchy ();
