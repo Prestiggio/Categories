@@ -9,6 +9,10 @@ trait CategorizableTrait
 		return $this->morphMany('Ry\Categories\Models\Categorizable', 'categorizable');
 	}
 	
+	public function cats() {
+		return $this->morphToMany('Ry\Categories\Models\Categorie', 'categorizable', 'ry_socin_categorizables', 'categorie_id');
+	}
+	
 	public function getMainCategoryAttribute() {
 		$categories = $this->categories();
 		

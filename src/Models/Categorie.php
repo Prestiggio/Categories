@@ -22,6 +22,8 @@ class Categorie extends Node {
 
 	protected $fillable = ["active", "multiple", "input"];
 	
+	private $type;
+	
 	// protected $orderColumn = null;
 	
 	// protected $guarded = array('id', 'parent_id', 'lft', 'rgt', 'depth');
@@ -98,5 +100,13 @@ class Categorie extends Node {
 	
 	public function group() {
 		return $this->belongsTo("Ry\Categories\Models\Categorygroup", "categorygroup_id");
+	}
+	
+	public function setTypeAttribute($type) {
+		$this->type = $type;
+	}
+	
+	public function categorizables() {
+		return $this->morphedByMany($this->type, 'categorizable', 'ry_categories_categorizables');
 	}
 }
