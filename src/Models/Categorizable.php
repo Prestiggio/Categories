@@ -55,7 +55,7 @@ class Categorizable extends Model
 	
 	public static function byName($q, $cast, $notIn = [], $in = []) {
 		$ar = [];
-		$results = app("rymd.search")->search("categorie", $q);
+		$results = app("rymd.search")->search("categorie", $q, ["categorie_id"]);
 		foreach($results as $categories) {
 			foreach($categories as $categorie) {
 				$ar[$categorie->categorie_id] = $categorie;

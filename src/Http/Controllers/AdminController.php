@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ry\Categories\Models\Categorygroup;
 use Ry\Categories\Models\Categorie;
+use Illuminate\Database\Eloquent\Collection;
 use Auth;
 
 class AdminController extends Controller
@@ -12,7 +13,7 @@ class AdminController extends Controller
 	private $categorizable;
 	
 	public function __construct() {
-		$this->middleware("admin");
+		$this->middleware(["web", "admin"]);
 	}
 	
 	public function getCategory($category) {
@@ -23,7 +24,8 @@ class AdminController extends Controller
 		return view("rycategories::edit");
 	}
 	
-	public function getCategories($notIn = []) {
+	public function getCategories(Request $request) {
+		$notIn = [];
 		if(count($notIn)>0) {
 			$roots = Categorie::roots ()->whereNotIn("id", $notIn)->get ();
 		}
@@ -38,6 +40,16 @@ class AdminController extends Controller
 			}
 		}
 		return $ar;
+	}
+	
+	public function getRootCategories($notIn = []) {
+		if(count($notIn)>0) {
+			$roots = Categorie::roots ()->whereNotIn("id", $notIn)->get ();
+		}
+		else {
+			$roots = Categorie::roots ()->get ();
+		}
+		return $roots;
 	}
 	
 	public function manageCategories($ar, $parent = null, $lang = null) {
