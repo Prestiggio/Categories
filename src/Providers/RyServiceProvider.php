@@ -31,11 +31,11 @@ class RyServiceProvider extends ServiceProvider
     	$this->mergeConfigFrom(
 	        	__DIR__.'/../config/rycategories.php', 'rycategories'
 	    );
+	    */
     	
     	$this->publishes([
-    			__DIR__.'/../assets' => public_path('vendor/rycategories'),
+    			__DIR__.'/../assets/templates' => public_path('vendor/rycategories'),
     	], "public");    	
-    	*/
     	
     	//ressources
     	$this->loadViewsFrom(__DIR__.'/../ressources/views', 'rycategories');
