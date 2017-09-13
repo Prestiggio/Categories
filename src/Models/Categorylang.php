@@ -49,6 +49,6 @@ class Categorylang extends Model
 	}
 	
 	public function getLinkAttribute()  {
-		return action("\Ry\Categories\Http\Controllers\PublicController@getCategory", ["category" => $this->path]);
+		return action("\Ry\Categories\Http\Controllers\PublicController@category", ["category" => $this->path]);
 	}
 }

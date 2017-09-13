@@ -52,6 +52,11 @@ class AdminController extends Controller
 		return $roots;
 	}
 	
+	public function postCategories(Request $request) {
+		$this->manageCategories($request->all());
+		return ["status" => "ok", "redirect" => ""];
+	}
+	
 	public function manageCategories($ar, $parent = null, $lang = null) {
 		$user = Auth::user ();
 		
@@ -84,7 +89,7 @@ class AdminController extends Controller
 					$p->makeChildOf ( $parent );
 				}
 				else {
-					$p = Categorygroup::where("id", "=", 1)->first()->categories()->create ( [
+					$p = Categorygroup::where("id", "=", isset($a["group"]["id"]) ? $a["group"]["id"] : 1)->first()->categories()->create ( [
 							"active" => 1,
 							"multiple" => 1,
 							"input" => "text"

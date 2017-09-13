@@ -3,9 +3,9 @@
 namespace Ry\Categories\Console\Commands;
 
 use Illuminate\Console\Command;
-use Ry\Categories\Models\Categorie;
 use Ry\Categories\Models\Categorylang;
 use Ry\Categories\Models\Categorygroup;
+use Illuminate\Database\Eloquent\Model;
 
 class Categorie extends Command
 {
@@ -14,7 +14,7 @@ class Categorie extends Command
      *
      * @var string
      */
-    protected $signature = 'category:install';
+    protected $signature = 'category:addgroup';
 
     /**
      * The console command description.
@@ -40,9 +40,12 @@ class Categorie extends Command
      */
     public function handle()
     {
-        $this->call("vendor:publish", [
-        		"--tag" => "migrations"
+        Model::unguard();
+        
+        Categorygroup::create([
+        		"name" => $this->ask("Nom:")
         ]);
-        $this->call("migrate");
+        
+        Model::reguard();
     }
 }

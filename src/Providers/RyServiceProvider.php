@@ -10,6 +10,7 @@ use Baum\Providers\BaumServiceProvider;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Ry\Categories\Models\Categorylang;
 use Ry\Categories\Models\Categorie;
+use Ry\Categories\Console\Commands\Categorie as CategorieCommand;
 
 class RyServiceProvider extends ServiceProvider
 {
@@ -75,6 +76,10 @@ class RyServiceProvider extends ServiceProvider
         
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('LaravelLocalization', LaravelLocalization::class);
+        $this->app->singleton("rycategories.addgroup", function($app){
+        	return new CategorieCommand();
+        });
+        $this->commands("rycategories.addgroup");
     }
     
     public function map()
