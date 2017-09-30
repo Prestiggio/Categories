@@ -11,6 +11,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Ry\Categories\Models\Categorylang;
 use Ry\Categories\Models\Categorie;
 use Ry\Categories\Console\Commands\Categorie as CategorieCommand;
+use Ry\Categories\RyCategorie;
 
 class RyServiceProvider extends ServiceProvider
 {
@@ -80,6 +81,9 @@ class RyServiceProvider extends ServiceProvider
         	return new CategorieCommand();
         });
         $this->commands("rycategories.addgroup");
+        $this->app->singleton("rycategories", function($app){
+        	return new RyCategorie();
+        });
     }
     
     public function map()
