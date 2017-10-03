@@ -27,11 +27,15 @@ class AdminController extends Controller
 	public function getCategories(Request $request) {
 		$notIn = [];
 		if(count($notIn)>0) {
-			$roots = Categorie::roots ()->whereNotIn("id", $notIn)->get ();
+			$query = Categorie::roots ()->whereNotIn("id", $notIn);
 		}
 		else {
-			$roots = Categorie::roots ()->get ();
+			$query = Categorie::roots ();
 		}
+		if($request->has("group")) {
+			$query->where("categorygroup_id", "=", $request->get("group")["id"]);
+		}
+		$roots = $query->get();
 		$ar = [ ];
 		foreach ( $roots as $root ) {
 			$obj = $root->getDescendantsAndSelf ()->toHierarchy ();

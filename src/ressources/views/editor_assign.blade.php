@@ -1,6 +1,6 @@
 <script type="application/tree" id="{{$id}}">
-	<ul ng-show="!$parent.pipo">
-		<li ng-repeat="child in children" rytree src="{{$id}}" ng-if="!child.deleted" children="child.children">
+	<ul layout-lg="row" layout-xs="column" ng-show="!$parent.pipo" layout-wrap>
+		<li flex-lg="50" ng-repeat="child in children" rytree src="{{$id}}" ng-if="!child.deleted" children="child.children">
 			<div layout="row" layout-wrap layout-align="start center">
 				<a href="#" ng-click="pipo=!pipo"><md-icon ng-show="!pipo" md-font-icon="fa fa-angle-down"></md-icon><md-icon ng-show="pipo" md-font-icon="fa fa-angle-right"></md-icon></a>
 				<div layout="row">
