@@ -68,7 +68,7 @@ class AdminController extends Controller
 			$lang = "fr";
 		
 		foreach ( $ar as $a ) {
-			if (isset ( $a ["deleted"] ) && $a ["deleted"] == true) {
+			if ((isset ( $a ["deleted"] ) && $a ["deleted"] == true) || (isset ( $a ["selected"] ) && $a ["selected"] == false)) {
 				if (isset ( $a ["id"] )) {
 					Categorie::where("id", "=", $a ["id"] )->first()->delete();
 				}
@@ -120,9 +120,9 @@ class AdminController extends Controller
 			$lang = "fr";
 	
 		foreach ( $ar as $a ) {
-			if (isset ( $a ["deleted"] ) && $a ["deleted"] == true) {
+			if ((isset ( $a ["deleted"] ) && $a ["deleted"] == true) || (isset ( $a ["selected"] ) && $a ["selected"] == false)) {
 				if (isset ( $a ["id"] )) {
-					$this->categorizable->categories ()->detach ( $a ["id"] );
+					$this->categorizable->categories()->where("categorie_id", "=", $a["id"])->delete();
 				}
 				continue;
 			}

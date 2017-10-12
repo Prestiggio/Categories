@@ -48,7 +48,8 @@ class Categorizable extends Model
 		$cats = $query->get();
 		$ar = [];
 		foreach($cats as $cat)
-			$ar[] = $cat->categorizable;
+			if($cat->categorizable)
+				$ar[$cat->categorizable->id] = $cat->categorizable;
 		
 		return $ar;
 	}
