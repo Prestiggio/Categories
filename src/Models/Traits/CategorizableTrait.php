@@ -20,9 +20,15 @@ trait CategorizableTrait
 		if($main->exists())
 			return $main->first();
 		
-		if($categories->exists())
-			return $categories->first()->getAncestors()->first();
+		$categories = $this->categories();
 		
-		return Categorie::where("id", "=", 1)->first();
+		if($categories->exists()) {
+			if($categories->first()->category->getAncestors())
+				return $categories->first()->category->getAncestors()->first();
+			if($categories->first()->category->parent())
+				return $categories->first()->category->parent();
+		}
+		
+		return $this->categories()->first();
 	}
 }
