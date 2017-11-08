@@ -3,7 +3,6 @@ namespace Ry\Categories\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Ry\Categories\Models\Categorie;
-use LaravelLocalization;
 use Baum\Extensions\Eloquent\Model;
 use Ry\Caracteres\Models\Characteristic;
 use Ry\Categories\Models\Categorygroup;

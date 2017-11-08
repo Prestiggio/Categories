@@ -2,7 +2,6 @@
 namespace Ry\Categories\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use LaravelLocalization;
 
 class Categorizable extends Model
 {
