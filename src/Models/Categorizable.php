@@ -74,4 +74,8 @@ class Categorizable extends Model
 		
 		return $ar;
 	}
+
+	public function scopeHigh($query, $n=5) {
+		$query->take($n);
+	}
 }
