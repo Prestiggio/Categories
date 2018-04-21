@@ -11,7 +11,7 @@ class Categorizable extends Model
 	
 	protected $visible = ["id", "category", "main"];
 	
-	protected $with = ["category"];
+	//protected $with = ["category"];
 	
 	private static $sels = [];
 	

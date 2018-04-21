@@ -40,12 +40,10 @@ class Categorie extends Command
      */
     public function handle()
     {
-        Model::unguard();
-        
         Categorygroup::create([
         		"name" => $this->ask("Nom:")
         ]);
         
-        Model::reguard();
+        
     }
 }

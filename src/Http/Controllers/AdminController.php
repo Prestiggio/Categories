@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ry\Categories\Models\Categorygroup;
 use Ry\Categories\Models\Categorie;
+use Ry\Categories\Models\Categorylang;
 use Illuminate\Database\Eloquent\Collection;
 use Auth;
 
@@ -79,6 +80,8 @@ class AdminController extends Controller
 			if (isset ( $a ["id"] ))
 				$p = Categorie::where ( "id", "=", $a ["id"] )->first ();
 			elseif (isset ( $a ["tempid"] )) {
+				Categorie::unguard();
+				Categorylang::unguard();
 				if($parent) {
 					$p = $parent->group->categories ()->create ( [
 							"active" => 1,
@@ -105,6 +108,8 @@ class AdminController extends Controller
 					] );
 				}
 				$p->save ();
+				Categorie::reguard();
+				Categorylang::reguard();
 			}
 		
 			$this->manageCategories ($a ["children"], $p );
@@ -131,6 +136,8 @@ class AdminController extends Controller
 			if (isset ( $a ["id"] ))
 				$p = Categorie::where ( "id", "=", $a ["id"] )->first ();
 			elseif (isset ( $a ["tempid"] )) {
+				Categorie::unguard();
+				Categorylang::unguard();
 				if($parent) {
 					$p = $parent->group->categories ()->create ( [
 							"active" => 1,
@@ -157,14 +164,18 @@ class AdminController extends Controller
 					] );
 				}
 				$p->save ();
+				Categorie::reguard();
+				Categorylang::reguard();
 			}
 				
 			if (isset ( $a ["selected"] ) && $a ["selected"] == true) {
 				$cz = $this->categorizable->categories ()->where("categorie_id", "=", $p->id);
 				if(!$cz->exists()) {
+					Categorie::unguard();
 					$this->categorizable->categories ()->create ([
 							"categorie_id" => $p->id
 					]);
+					Categorie::reguard();
 				}
 			}
 				

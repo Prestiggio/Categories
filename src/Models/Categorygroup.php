@@ -2,6 +2,7 @@
 namespace Ry\Categories\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Ry\Medias\Models\Media;
 
 class Categorygroup extends Model
 {
@@ -16,6 +17,8 @@ class Categorygroup extends Model
 		if (! $lang)
 			$lang = "fr";
 	
+		Categorie::unguard();
+		Categorylang::unguard();
 		$categorie = $this->categories()->create ( [
 				"active" => 1,
 				"multiple" => 1,
@@ -27,6 +30,8 @@ class Categorygroup extends Model
 				"name" => $name,
 				"descriptif" => $descriptif
 		]]);
+		Categorie::reguard();
+		Categorylang::reguard();
 		return $categorie;
 	}
 	
@@ -34,12 +39,14 @@ class Categorygroup extends Model
 		foreach ( $ar as $node ) {
 			$me = $this->createCategorie( $node ["name"] , isset($node["input"]) ? $node["input"] : 'text');
 			if(isset($node["icon"])) {
+				Media::unguard();
 				$me->medias()->create([
 						"owner_id" => 1,
 						"title" => $node["name"],
 						"path" => $node["icon"],
 						"type" => "image"
 				]);
+				Media::reguard();
 			}
 			if ($parent)
 				$me->makeChildOf ( $parent );
