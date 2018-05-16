@@ -12,14 +12,15 @@ class PublicJsonController extends Controller
 	private $group;
 	
 	public function getTest() {
-		Model::unguard();
+		Categorygroup::unguard();
 		$this->group = Categorygroup::create([
 				"name" => "Immobilier"
 		]);
+		Categorygroup::reguard();
 		$parent = $this->createCategorie( "za ian ty" , 'text');
 		$me = $this->createCategorie("iny ndray izy", "text");
 		$me->makeChildOf($parent);
-		Model::reguard();
+
 		return [$me, $parent];
 	}
 	
@@ -28,6 +29,8 @@ class PublicJsonController extends Controller
 		if (! $lang)
 			$lang = "fr";
 	
+		Categorie::unguard();
+		Categorylang::unguard();
 		$categorie = $this->group->categories()->create ( [
 				"active" => 1,
 				"multiple" => 1,
@@ -39,6 +42,8 @@ class PublicJsonController extends Controller
 				"name" => $name,
 				"descriptif" => $descriptif
 		]]);
+		Categorie::reguard();
+		Categorylang::reguard();
 		return $categorie;
 	}
 }

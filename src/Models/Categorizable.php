@@ -11,7 +11,7 @@ class Categorizable extends Model
 	
 	protected $visible = ["id", "category", "main"];
 	
-	protected $with = ["category"];
+	//protected $with = ["category"];
 	
 	private static $sels = [];
 	
@@ -73,5 +73,9 @@ class Categorizable extends Model
 			$ar[] = $cat->categorizable;
 		
 		return $ar;
+	}
+
+	public function scopeHigh($query, $n=5) {
+		$query->take($n);
 	}
 }
