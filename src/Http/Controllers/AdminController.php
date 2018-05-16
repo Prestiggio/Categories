@@ -111,18 +111,77 @@ class AdminController extends Controller
 		}
 	}
 	
-	public function attributeCategories($categorizable, $ar, $parent = null, $lang = null) {
+	public function attributeCategories($categorizable, $ar, $parent = null, $lang = "fr", $group = 1) {
 		$user = Auth::user ();
 		
 		$this->categorizable = $categorizable;
-	
-		if (! $lang)
-			$lang = "fr";
 	
 		foreach ( $ar as $a ) {
 			if ((isset ( $a ["deleted"] ) && $a ["deleted"] == true) || (isset ( $a ["selected"] ) && $a ["selected"] == false)) {
 				if (isset ( $a ["id"] )) {
 					$this->categorizable->categories()->where("categorie_id", "=", $a["id"])->delete();
+				}
+				if(isset($a["children"])) {
+					$p = null;
+					if (isset ( $a ["id"] ))
+						$p = Categorie::where ( "id", "=", $a ["id"] )->first ();
+					elseif (isset ( $a ["tempid"] )) {
+						if($parent) {
+							$p = $parent->group->categories ()->create ( [
+									"active" => 1,
+									"multiple" => 1,
+									"input" => "text"
+							] );
+							$p->terms ()->create ( [
+									"user_id" => $user->id,
+									"lang" => $lang,
+									"name" => $a ["term"] ["name"]
+							] );
+							$p->makeChildOf ( $parent );
+						}
+						else {
+							$p = Categorygroup::where("id", "=", isset($a["group"]["id"]) ? $a["group"]["id"] : $group)->first()->categories()->create ( [
+									"active" => 1,
+									"multiple" => 1,
+									"input" => "text"
+							] );
+							$p->terms ()->create ( [
+									"user_id" => $user->id,
+									"lang" => $lang,
+									"name" => $a ["term"] ["name"]
+							] );
+						}
+						$p->save ();
+					}
+					$this->attributeCategories ($this->categorizable,  $a ["children"], $p );
+				}
+				elseif(isset ( $a ["tempid"] )) {
+					if($parent) {
+						$p = $parent->group->categories ()->create ( [
+								"active" => 1,
+								"multiple" => 1,
+								"input" => "text"
+						] );
+						$p->terms ()->create ( [
+								"user_id" => $user->id,
+								"lang" => $lang,
+								"name" => $a ["term"] ["name"]
+						] );
+						$p->makeChildOf ( $parent );
+					}
+					else {
+						$p = Categorygroup::where("id", "=", isset($a["group"]["id"]) ? $a["group"]["id"] : $group)->first()->categories()->create ( [
+								"active" => 1,
+								"multiple" => 1,
+								"input" => "text"
+						] );
+						$p->terms ()->create ( [
+								"user_id" => $user->id,
+								"lang" => $lang,
+								"name" => $a ["term"] ["name"]
+						] );
+					}
+					$p->save ();
 				}
 				continue;
 			}
@@ -145,7 +204,7 @@ class AdminController extends Controller
 					$p->makeChildOf ( $parent );
 				}
 				else {
-					$p = Categorygroup::where("id", "=", 1)->first()->categories()->create ( [
+					$p = Categorygroup::where("id", "=", isset($a["group"]["id"]) ? $a["group"]["id"] : $group)->first()->categories()->create ( [
 							"active" => 1,
 							"multiple" => 1,
 							"input" => "text"

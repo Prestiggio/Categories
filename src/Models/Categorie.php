@@ -20,6 +20,10 @@ class Categorie extends Node {
 	protected $hidden = ["parent_id", "depth", "categorygroup_id", "multiple", "input", "created_at", "updated_at"];
 
 	protected $fillable = ["active", "multiple", "input"];
+
+	protected $appends = ["selected"];
+
+	protected $with = ["group"];
 	
 	private $type;
 	
@@ -107,5 +111,9 @@ class Categorie extends Node {
 	
 	public function categorizables() {
 		return $this->morphedByMany($this->type, 'categorizable', 'ry_categories_categorizables');
+	}
+
+	public function getSelectedAttribute() {
+		return false;
 	}
 }

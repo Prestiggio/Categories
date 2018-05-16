@@ -22,8 +22,6 @@ class RyServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-    	parent::boot();
-    	
     	/*
     	$this->publishes([    			
     			__DIR__.'/../config/rycategories.php' => config_path('rycategories.php')
