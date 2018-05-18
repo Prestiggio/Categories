@@ -126,6 +126,9 @@ class AdminController extends Controller
 				if (isset ( $a ["id"] )) {
 					$this->categorizable->categories()->where("categorie_id", "=", $a["id"])->delete();
 				}
+				if(isset ( $a ["deleted"] ) && $a ["deleted"] == true) {
+					continue;
+				}
 				if(isset($a["children"])) {
 					$p = null;
 					if (isset ( $a ["id"] ))
