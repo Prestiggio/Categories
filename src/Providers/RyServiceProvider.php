@@ -57,10 +57,9 @@ class RyServiceProvider extends ServiceProvider
     		return Categorylang::where("path", "=", $value)->first()->category;
     	});
     	
-    	Categorie::saved(function($category){
-    		foreach ($category->terms as $term)
-    			$term->makepath();
-    	});
+	    Categorylang::saved(function($term){
+	        $term->makepath();
+	    });
     }
 
     /**

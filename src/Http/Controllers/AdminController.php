@@ -68,6 +68,7 @@ class AdminController extends Controller
 		if (! $lang)
 			$lang = "fr";
 		
+		$index = 0;
 		foreach ( $ar as $a ) {
 			if ((isset ( $a ["deleted"] ) && $a ["deleted"] == true) || (isset ( $a ["selected"] ) && $a ["selected"] == false)) {
 				if (isset ( $a ["id"] )) {
@@ -77,34 +78,49 @@ class AdminController extends Controller
 			}
 		
 			$p = null;
-			if (isset ( $a ["id"] ))
+			if (isset ( $a ["id"] )) {
 				$p = Categorie::where ( "id", "=", $a ["id"] )->first ();
+				if(isset($a['dirty']) && $a['dirty']) {
+				    if(isset($a['active'])) {
+				        $p->active = $a['active'];
+				    }
+				    $p->save();
+				    if(isset($a['term']['name'])) {
+				        $p->term->name = $a['term']['name'];
+				        $p->term->save();
+				    }
+				}
+			}
 			elseif (isset ( $a ["tempid"] )) {
 				Categorie::unguard();
 				Categorylang::unguard();
 				if($parent) {
 					$p = $parent->group->categories ()->create ( [
-							"active" => 1,
+							"active" => isset($a["active"]) ? $a["active"] : 1,
 							"multiple" => 1,
-							"input" => "text"
+					    "position" => $index,
+					    "input" => isset($a["input"]) ? $a["input"] : "text"
 					] );
 					$p->terms ()->create ( [
 							"user_id" => $user->id,
 							"lang" => $lang,
-							"name" => $a ["term"] ["name"]
+							"name" => $a ["term"] ["name"],
+					    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 					] );
 					$p->makeChildOf ( $parent );
 				}
 				else {
 					$p = Categorygroup::where("id", "=", isset($a["group"]["id"]) ? $a["group"]["id"] : 1)->first()->categories()->create ( [
-							"active" => 1,
+					       "active" => isset($a["active"]) ? $a["active"] : 1,
 							"multiple" => 1,
-							"input" => "text"
+					    "position" => $index,
+					    "input" => isset($a["input"]) ? $a["input"] : "text"
 					] );
 					$p->terms ()->create ( [
 							"user_id" => $user->id,
 							"lang" => $lang,
-							"name" => $a ["term"] ["name"]
+							"name" => $a ["term"] ["name"],
+					    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 					] );
 				}
 				$p->save ();
@@ -112,7 +128,14 @@ class AdminController extends Controller
 				Categorylang::reguard();
 			}
 		
-			$this->manageCategories ($a ["children"], $p );
+			if(isset($a['children'])) {
+			    $this->manageCategories ($a ["children"], $p );
+			}
+			if($p) {
+			    $p->position = $index;
+			    $p->save();
+			}
+			$index++;
 		}
 	}
 	
@@ -121,6 +144,7 @@ class AdminController extends Controller
 		
 		$this->categorizable = $categorizable;
 	
+		$index = 0;
 		foreach ( $ar as $a ) {
 			if ((isset ( $a ["deleted"] ) && $a ["deleted"] == true) || (isset ( $a ["selected"] ) && $a ["selected"] == false)) {
 				if (isset ( $a ["id"] )) {
@@ -136,93 +160,109 @@ class AdminController extends Controller
 					elseif (isset ( $a ["tempid"] )) {
 						if($parent) {
 							$p = $parent->group->categories ()->create ( [
-									"active" => 1,
+							         "active" => isset($a["active"]) ? $a["active"] : 1,
 									"multiple" => 1,
-									"input" => "text"
+							    "position" => $index,
+							    "input" => isset($a["input"]) ? $a["input"] : "text"
 							] );
 							$p->terms ()->create ( [
 									"user_id" => $user->id,
 									"lang" => $lang,
-									"name" => $a ["term"] ["name"]
+									"name" => $a ["term"] ["name"],
+							    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 							] );
 							$p->makeChildOf ( $parent );
 						}
 						else {
 							$p = Categorygroup::where("id", "=", isset($a["group"]["id"]) ? $a["group"]["id"] : $group)->first()->categories()->create ( [
-									"active" => 1,
+							         "active" => isset($a["active"]) ? $a["active"] : 1,
 									"multiple" => 1,
-									"input" => "text"
+							    "position" => $index,
+							    "input" => isset($a["input"]) ? $a["input"] : "text"
 							] );
 							$p->terms ()->create ( [
 									"user_id" => $user->id,
 									"lang" => $lang,
-									"name" => $a ["term"] ["name"]
+									"name" => $a ["term"] ["name"],
+							    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 							] );
 						}
 						$p->save ();
 					}
 					$this->attributeCategories ($this->categorizable,  $a ["children"], $p );
+					$index++;
 				}
 				elseif(isset ( $a ["tempid"] )) {
+				    $p = null;
 					if($parent) {
 						$p = $parent->group->categories ()->create ( [
-								"active" => 1,
+						    "active" => isset($a["active"]) ? $a["active"] : 1,
 								"multiple" => 1,
-								"input" => "text"
+						    "position" => $index,
+						    "input" => isset($a["input"]) ? $a["input"] : "text"
 						] );
 						$p->terms ()->create ( [
 								"user_id" => $user->id,
 								"lang" => $lang,
-								"name" => $a ["term"] ["name"]
+								"name" => $a ["term"] ["name"],
+						    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 						] );
 						$p->makeChildOf ( $parent );
 					}
 					else {
 						$p = Categorygroup::where("id", "=", isset($a["group"]["id"]) ? $a["group"]["id"] : $group)->first()->categories()->create ( [
-								"active" => 1,
+						    "active" => isset($a["active"]) ? $a["active"] : 1,
 								"multiple" => 1,
-								"input" => "text"
+						    "position" => $index,
+						    "input" => isset($a["input"]) ? $a["input"] : "text"
 						] );
 						$p->terms ()->create ( [
 								"user_id" => $user->id,
 								"lang" => $lang,
-								"name" => $a ["term"] ["name"]
+								"name" => $a ["term"] ["name"],
+						    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 						] );
 					}
 					$p->save ();
+					$index++;
 				}
 				continue;
 			}
 				
 			$p = null;
-			if (isset ( $a ["id"] ))
+			if (isset ( $a ["id"] )) {
 				$p = Categorie::where ( "id", "=", $a ["id"] )->first ();
+			}
 			elseif (isset ( $a ["tempid"] )) {
 				Categorie::unguard();
 				Categorylang::unguard();
 				if($parent) {
 					$p = $parent->group->categories ()->create ( [
-							"active" => 1,
+					    "active" => isset($a["active"]) ? $a["active"] : 1,
 							"multiple" => 1,
-							"input" => "text"
+					    "position" => $index,
+							"input" => isset($a["input"]) ? $a["input"] : "text"
 					] );
 					$p->terms ()->create ( [
 							"user_id" => $user->id,
 							"lang" => $lang,
-							"name" => $a ["term"] ["name"]
+							"name" => $a ["term"] ["name"],
+					    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 					] );
 					$p->makeChildOf ( $parent );
 				}
 				else {
 					$p = Categorygroup::where("id", "=", isset($a["group"]["id"]) ? $a["group"]["id"] : $group)->first()->categories()->create ( [
-							"active" => 1,
+					    "active" => isset($a["active"]) ? $a["active"] : 1,
 							"multiple" => 1,
-							"input" => "text"
+					    "position" => $index,
+					    "input" => isset($a["input"]) ? $a["input"] : "text"
 					] );
 					$p->terms ()->create ( [
 							"user_id" => $user->id,
 							"lang" => $lang,
-							"name" => $a ["term"] ["name"]
+							"name" => $a ["term"] ["name"],
+					    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 					] );
 				}
 				$p->save ();
@@ -242,6 +282,7 @@ class AdminController extends Controller
 			}
 				
 			$this->attributeCategories ($this->categorizable,  $a ["children"], $p );
+			$index++;
 		}
 	}
 }

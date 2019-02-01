@@ -8,6 +8,8 @@ class Categorygroup extends Model
 {
 	protected $table = "ry_categories_categorygroups";
 	
+	protected $fillable = ['name'];
+	
 	public function categories() {
 		return $this->hasMany("\Ry\Categories\Models\Categorie", "categorygroup_id");
 	}

@@ -3,12 +3,11 @@ namespace Ry\Categories\Models;
 
 use Baum\Node;
 use Ry\Medias\Models\Traits\MediableTrait;
-use Ry\Caracteres\Models\Traits\RankableTrait;
 use Ry\Medias\Models\Media;
 
 class Categorie extends Node {
 	
-	use MediableTrait, RankableTrait;
+	use MediableTrait;
 	
 	/**
 	 * Table name.
@@ -24,6 +23,8 @@ class Categorie extends Node {
 	protected $appends = ["selected"];
 
 	protected $with = ["group"];
+	
+	protected $orderColumn = 'position';
 	
 	private $type;
 	
@@ -61,6 +62,14 @@ class Categorie extends Node {
 	// Please refer the Laravel documentation for further instructions on how
 	// to hook your own callbacks/observers into this events:
 	// http://laravel.com/docs/5.0/eloquent#model-events
+	
+	protected static function boot() {
+	    parent::boot();
+	    
+	    static::addGlobalScope("positionOrder", function($q){
+	        $q->orderBy("position");
+	    });
+	}
 	
 	public function term() {
 		return $this->hasOne("Ry\Categories\Models\Categorylang", "categorie_id")->where(function($query){
