@@ -280,7 +280,9 @@ class AdminController extends Controller
 					Categorie::reguard();
 				}
 			}
-				
+			
+			if(!isset($a['children']))
+			    $a['children'] = [];
 			$this->attributeCategories ($this->categorizable,  $a ["children"], $p );
 			$index++;
 		}
