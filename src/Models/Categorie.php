@@ -4,6 +4,7 @@ namespace Ry\Categories\Models;
 use Baum\Node;
 use Ry\Medias\Models\Traits\MediableTrait;
 use Ry\Medias\Models\Media;
+use Illuminate\Support\Facades\Cache;
 
 class Categorie extends Node {
 	
@@ -21,8 +22,6 @@ class Categorie extends Node {
 	protected $fillable = ["active", "multiple", "input"];
 
 	protected $appends = ["selected"];
-
-	protected $with = ["group"];
 	
 	protected $orderColumn = 'position';
 	
@@ -68,6 +67,10 @@ class Categorie extends Node {
 	    
 	    static::addGlobalScope("positionOrder", function($q){
 	        $q->orderBy("position");
+	    });
+	    
+	    static::saved(function(Categorie $categorie){
+	        Cache::forget('rycategorygroup.'.$categorie->group->name);
 	    });
 	}
 	
@@ -124,5 +127,16 @@ class Categorie extends Node {
 
 	public function getSelectedAttribute() {
 		return false;
+	}
+	
+	public static function cacheGroup($groupname, $levels=2) {
+	    return Cache::rememberForever('rycategorygroup.'.$groupname, function()use($groupname, $levels){
+	        $children = [];
+	        for($i=0;$i<$levels;$i++)
+	            $children[] = 'children';
+	        return static::whereNull("parent_id")->whereHas("group", function($q)use($groupname){
+	            $q->whereName($groupname);
+	        })->with([implode(".", $children)])->get();
+	    });
 	}
 }

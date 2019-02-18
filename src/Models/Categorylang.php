@@ -11,9 +11,7 @@ class Categorylang extends Model
 	
 	protected $fillable = ["user_id", "path", "name", "descriptif", "lang"];
 	
-	protected $visible = ["id", "name", "link", "tree"];
-	
-	protected $appends = ["tree", "link"];
+	protected $visible = ["id", "name"];
 	
 	public function category() {
 		return $this->belongsTo("Ry\Categories\Models\Categorie", "categorie_id");
