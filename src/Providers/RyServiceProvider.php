@@ -8,10 +8,11 @@ use Illuminate\Routing\Router;
 use Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider;
 use Baum\Providers\BaumServiceProvider;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Ry\Categories\Models\Categorylang;
 use Ry\Categories\Models\Categorie;
 use Ry\Categories\Console\Commands\Categorie as CategorieCommand;
 use Ry\Categories\RyCategorie;
+use Ry\Admin\Models\LanguageTranslation;
+use App;
 
 class RyServiceProvider extends ServiceProvider
 {
@@ -54,11 +55,13 @@ class RyServiceProvider extends ServiceProvider
     	$this->map();
     	
     	$this->app["router"]->bind("category", function($value){
-    		return Categorylang::where("path", "=", $value)->first()->category;
+    	    $translated = LanguageTranslation::whereTranslationString($value)->whereLang(App::getLocale())->first();
+    	    if($translated)
+    		     return Categorie::whereTranslationId($translated->translation_id);
     	});
     	
-	    Categorylang::saved(function($term){
-	        $term->makepath();
+	    Categorie::saved(function($categorie){
+	        $categorie->makepath();
 	    });
     }
 

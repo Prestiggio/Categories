@@ -3,6 +3,7 @@ namespace Ry\Categories\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Ry\Medias\Models\Media;
+use Ry\Admin\Http\Controllers\AdminController as LanguageAdminController;
 
 class Categorygroup extends Model
 {
@@ -15,25 +16,17 @@ class Categorygroup extends Model
 	}
 	
 	private function createCategorie($name, $input, $descriptif = "", $lang = null) {
-		$user_id = 1;
 		if (! $lang)
 			$lang = "fr";
 	
 		Categorie::unguard();
-		Categorylang::unguard();
 		$categorie = $this->categories()->create ( [
 				"active" => 1,
 				"multiple" => 1,
+		    "translation_id" => app(LanguageAdminController::class)->postTranslation($name, $lang)->id,
 				"input" => $input
 		] );
-		$categorie->terms ()->createMany ([[
-				"user_id" => $user_id,
-				"lang" => $lang,
-				"name" => $name,
-				"descriptif" => $descriptif
-		]]);
 		Categorie::reguard();
-		Categorylang::reguard();
 		return $categorie;
 	}
 	

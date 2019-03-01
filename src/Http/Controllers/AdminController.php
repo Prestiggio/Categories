@@ -5,9 +5,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ry\Categories\Models\Categorygroup;
 use Ry\Categories\Models\Categorie;
-use Ry\Categories\Models\Categorylang;
 use Illuminate\Database\Eloquent\Collection;
-use Auth;
+use Ry\Admin\Http\Controllers\AdminController as LanguageAdminController;
+use Auth, App;
 
 class AdminController extends Controller
 {
@@ -85,27 +85,20 @@ class AdminController extends Controller
 				        $p->active = $a['active'];
 				    }
 				    $p->save();
-				    if(isset($a['term']['name'])) {
-				        $p->term->name = $a['term']['name'];
-				        $p->term->save();
-				    }
+				    app(LanguageAdminController::class)->putTranslationById($p->translation_id, $a['term']['name'], $lang);
 				}
 			}
 			elseif (isset ( $a ["tempid"] )) {
 				Categorie::unguard();
-				Categorylang::unguard();
 				if($parent) {
+				    
 					$p = $parent->group->categories ()->create ( [
 							"active" => isset($a["active"]) ? $a["active"] : 1,
 							"multiple" => 1,
 					    "position" => $index,
+					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
+					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
 					    "input" => isset($a["input"]) ? $a["input"] : "text"
-					] );
-					$p->terms ()->create ( [
-							"user_id" => $user->id,
-							"lang" => $lang,
-							"name" => $a ["term"] ["name"],
-					    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 					] );
 					$p->makeChildOf ( $parent );
 				}
@@ -114,18 +107,13 @@ class AdminController extends Controller
 					       "active" => isset($a["active"]) ? $a["active"] : 1,
 							"multiple" => 1,
 					    "position" => $index,
+					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
+					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
 					    "input" => isset($a["input"]) ? $a["input"] : "text"
-					] );
-					$p->terms ()->create ( [
-							"user_id" => $user->id,
-							"lang" => $lang,
-							"name" => $a ["term"] ["name"],
-					    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 					] );
 				}
 				$p->save ();
 				Categorie::reguard();
-				Categorylang::reguard();
 			}
 		
 			if(isset($a['children'])) {
@@ -163,13 +151,9 @@ class AdminController extends Controller
 							         "active" => isset($a["active"]) ? $a["active"] : 1,
 									"multiple" => 1,
 							    "position" => $index,
+							    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
+							    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
 							    "input" => isset($a["input"]) ? $a["input"] : "text"
-							] );
-							$p->terms ()->create ( [
-									"user_id" => $user->id,
-									"lang" => $lang,
-									"name" => $a ["term"] ["name"],
-							    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 							] );
 							$p->makeChildOf ( $parent );
 						}
@@ -178,13 +162,9 @@ class AdminController extends Controller
 							         "active" => isset($a["active"]) ? $a["active"] : 1,
 									"multiple" => 1,
 							    "position" => $index,
+							    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
+							    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
 							    "input" => isset($a["input"]) ? $a["input"] : "text"
-							] );
-							$p->terms ()->create ( [
-									"user_id" => $user->id,
-									"lang" => $lang,
-									"name" => $a ["term"] ["name"],
-							    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 							] );
 						}
 						$p->save ();
@@ -199,13 +179,9 @@ class AdminController extends Controller
 						    "active" => isset($a["active"]) ? $a["active"] : 1,
 								"multiple" => 1,
 						    "position" => $index,
+						    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
+						    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
 						    "input" => isset($a["input"]) ? $a["input"] : "text"
-						] );
-						$p->terms ()->create ( [
-								"user_id" => $user->id,
-								"lang" => $lang,
-								"name" => $a ["term"] ["name"],
-						    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 						] );
 						$p->makeChildOf ( $parent );
 					}
@@ -214,13 +190,9 @@ class AdminController extends Controller
 						    "active" => isset($a["active"]) ? $a["active"] : 1,
 								"multiple" => 1,
 						    "position" => $index,
+						    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
+						    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
 						    "input" => isset($a["input"]) ? $a["input"] : "text"
-						] );
-						$p->terms ()->create ( [
-								"user_id" => $user->id,
-								"lang" => $lang,
-								"name" => $a ["term"] ["name"],
-						    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 						] );
 					}
 					$p->save ();
@@ -235,19 +207,14 @@ class AdminController extends Controller
 			}
 			elseif (isset ( $a ["tempid"] )) {
 				Categorie::unguard();
-				Categorylang::unguard();
 				if($parent) {
 					$p = $parent->group->categories ()->create ( [
 					    "active" => isset($a["active"]) ? $a["active"] : 1,
 							"multiple" => 1,
 					    "position" => $index,
-							"input" => isset($a["input"]) ? $a["input"] : "text"
-					] );
-					$p->terms ()->create ( [
-							"user_id" => $user->id,
-							"lang" => $lang,
-							"name" => $a ["term"] ["name"],
-					    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
+					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
+					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
+					    "input" => isset($a["input"]) ? $a["input"] : "text"
 					] );
 					$p->makeChildOf ( $parent );
 				}
@@ -256,18 +223,13 @@ class AdminController extends Controller
 					    "active" => isset($a["active"]) ? $a["active"] : 1,
 							"multiple" => 1,
 					    "position" => $index,
+					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
+					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
 					    "input" => isset($a["input"]) ? $a["input"] : "text"
-					] );
-					$p->terms ()->create ( [
-							"user_id" => $user->id,
-							"lang" => $lang,
-							"name" => $a ["term"] ["name"],
-					    "descriptif" => isset($a["descriptif"]) ? $a["descriptif"] : ''
 					] );
 				}
 				$p->save ();
 				Categorie::reguard();
-				Categorylang::reguard();
 			}
 				
 			if (isset ( $a ["selected"] ) && $a ["selected"] == true) {

@@ -5,6 +5,10 @@ use Baum\Node;
 use Ry\Medias\Models\Traits\MediableTrait;
 use Ry\Medias\Models\Media;
 use Illuminate\Support\Facades\Cache;
+use Ry\Admin\Models\LanguageTranslation;
+use Ry\Admin\Models\Translation;
+use App;
+use Ry\Admin\Http\Controllers\AdminController as LanguageTranslationController;
 
 class Categorie extends Node {
 	
@@ -21,11 +25,13 @@ class Categorie extends Node {
 
 	protected $fillable = ["active", "multiple", "input"];
 
-	protected $appends = ["selected"];
+	protected $appends = ["selected", "term"];
 	
 	protected $orderColumn = 'position';
 	
 	private $type;
+	
+	private static $cache = [];
 	
 	// protected $orderColumn = null;
 	
@@ -45,6 +51,8 @@ class Categorie extends Node {
 	// * @var array
 	// */
 	protected $scoped = ["categorygroup_id"];
+	
+	protected $with = ["translation"];
 	
 	// ////////////////////////////////////////////////////////////////////////////
 	
@@ -74,14 +82,22 @@ class Categorie extends Node {
 	    });
 	}
 	
-	public function term() {
-		return $this->hasOne("Ry\Categories\Models\Categorylang", "categorie_id")->where(function($query){
-			$query->where("lang", "=", "fr");
-		});
+	public function translation() {
+	    return $this->belongsTo(Translation::class, "translation_id");
 	}
 	
-	public function terms() {
-		return $this->hasMany("Ry\Categories\Models\Categorylang", "categorie_id");
+	public function getTermAttribute() {
+	    if(!isset(self::$cache[$this->id]))
+	        self::$cache[$this->id] = $this->translation->meanings()->current()->first();
+	    return self::$cache[$this->id];
+	}
+	
+	public function getTermsAttribute() {
+		return $this->translation->meanings;
+	}
+	
+	public function translatedPath() {
+	    return $this->belongsTo(Translation::class, "path_translation_id");
 	}
 	
 	public function getIconAttribute() {
@@ -103,14 +119,7 @@ class Categorie extends Node {
 	}
 	
 	public function getSlugAttribute() {
-		return $this->term->path;
-	}
-	
-	public function newQueryWithoutScopes() {
-		if(!in_array("term", $this->with))
-			$this->with[] = "term";
-		
-		return parent::newQueryWithoutScopes();
+		return $this->path;
 	}
 	
 	public function group() {
@@ -138,5 +147,42 @@ class Categorie extends Node {
 	            $q->whereName($groupname);
 	        })->with([implode(".", $children)])->get();
 	    });
+	}
+	
+	public function getPathAttribute() {
+	    if($this->path_translation_id>0) {
+	        $meanings = $this->translatedPath->meanings();
+	        if($meanings->current()->exists())
+	            return $meanings->current()->first()->translation_string;
+	        return $meanings->first()->translation_string;
+	    }
+	}
+	
+	public function makepath() {    
+        $ancestors = $this->getAncestorsAndSelf();
+        $a = [];
+        foreach($ancestors as $ancestor) {
+            $a[] = str_slug($ancestor->term->translation_string);
+        }
+        $path = implode("/", $a);
+        app(LanguageTranslationController::class)->putTranslationById($this->path_translation_id, $path);
+        
+        $descendants = $this->getDescendants();
+        foreach($descendants as $descendant) {
+            $descendant->makepath();
+        }
+	}
+	
+	public function getTreeAttribute() {
+	    $ancestors = $this->getAncestorsAndSelf();
+	    $a = [];
+	    foreach($ancestors as $ancestor) {
+	        $a[] = $ancestor->term->translation_string;
+	    }
+	    return implode(" > ", $a);
+	}
+	
+	public function getLinkAttribute() {
+	    return action("\Ry\Categories\Http\Controllers\PublicController@category", ["category" => $this->path]);
 	}
 }

@@ -3,7 +3,6 @@
 namespace Ry\Categories\Console\Commands;
 
 use Illuminate\Console\Command;
-use Ry\Categories\Models\Categorylang;
 use Ry\Categories\Models\Categorygroup;
 use Illuminate\Database\Eloquent\Model;
 
