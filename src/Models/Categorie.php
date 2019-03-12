@@ -31,8 +31,6 @@ class Categorie extends Node {
 	
 	private $type;
 	
-	private static $cache = [];
-	
 	// protected $orderColumn = null;
 	
 	// protected $guarded = array('id', 'parent_id', 'lft', 'rgt', 'depth');
@@ -87,13 +85,13 @@ class Categorie extends Node {
 	}
 	
 	public function getTermAttribute() {
-	    if(!isset(self::$cache[$this->id]))
-	        self::$cache[$this->id] = $this->translation->meanings()->current()->first();
-	    return self::$cache[$this->id];
+	    return (object)[
+	        'name' => app('rycategories')->termName($this)
+	    ];
 	}
 	
 	public function getTermsAttribute() {
-		return $this->translation->meanings;
+	    return $this->translation->meanings()->current()->first();
 	}
 	
 	public function translatedPath() {
