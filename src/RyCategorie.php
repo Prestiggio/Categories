@@ -19,6 +19,8 @@ class RyCategorie
 	}
 	
 	public function termName(Categorie $categorie) {
+	    if(!isset($this->translations[$categorie->id]))
+	        $this->translations[$categorie->id] = LanguageTranslation::join("ry_categories_categories", "ry_categories_categories.translation_id", "=", "ry_admin_language_translations.translation_id")->whereLang(App::getLocale())->where('ry_categories_categories.id', '=', $categorie->id)->first()->translation_string;
 	    return $this->translations[$categorie->id];
 	}
 }

@@ -160,7 +160,7 @@ class Categorie extends Node {
         $ancestors = $this->getAncestorsAndSelf();
         $a = [];
         foreach($ancestors as $ancestor) {
-            $a[] = str_slug($ancestor->term->translation_string);
+            $a[] = str_slug($ancestor->term->name);
         }
         $path = implode("/", $a);
         app(LanguageTranslationController::class)->putTranslationById($this->path_translation_id, $path);
@@ -175,7 +175,7 @@ class Categorie extends Node {
 	    $ancestors = $this->getAncestorsAndSelf();
 	    $a = [];
 	    foreach($ancestors as $ancestor) {
-	        $a[] = $ancestor->term->translation_string;
+	        $a[] = $ancestor->term->name;
 	    }
 	    return implode(" > ", $a);
 	}
