@@ -98,7 +98,7 @@ class AdminController extends Controller
 					    "position" => $index,
 					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-					    "input" => isset($a["input"]) ? $a["input"] : "text"
+					    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
 					] );
 					$p->makeChildOf ( $parent );
 				}
@@ -109,7 +109,7 @@ class AdminController extends Controller
 					    "position" => $index,
 					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-					    "input" => isset($a["input"]) ? $a["input"] : "text"
+					    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
 					] );
 				}
 				$p->save ();
@@ -153,7 +153,7 @@ class AdminController extends Controller
 							    "position" => $index,
 							    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 							    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-							    "input" => isset($a["input"]) ? $a["input"] : "text"
+							    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
 							] );
 							$p->makeChildOf ( $parent );
 						}
@@ -164,7 +164,7 @@ class AdminController extends Controller
 							    "position" => $index,
 							    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 							    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-							    "input" => isset($a["input"]) ? $a["input"] : "text"
+							    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
 							] );
 						}
 						$p->save ();
@@ -181,7 +181,7 @@ class AdminController extends Controller
 						    "position" => $index,
 						    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 						    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-						    "input" => isset($a["input"]) ? $a["input"] : "text"
+						    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
 						] );
 						$p->makeChildOf ( $parent );
 					}
@@ -192,7 +192,7 @@ class AdminController extends Controller
 						    "position" => $index,
 						    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 						    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-						    "input" => isset($a["input"]) ? $a["input"] : "text"
+						    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
 						] );
 					}
 					$p->save ();
@@ -214,7 +214,7 @@ class AdminController extends Controller
 					    "position" => $index,
 					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-					    "input" => isset($a["input"]) ? $a["input"] : "text"
+					    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
 					] );
 					$p->makeChildOf ( $parent );
 				}
@@ -225,7 +225,7 @@ class AdminController extends Controller
 					    "position" => $index,
 					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-					    "input" => isset($a["input"]) ? $a["input"] : "text"
+					    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
 					] );
 				}
 				$p->save ();
