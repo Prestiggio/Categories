@@ -8,6 +8,7 @@ use Ry\Categories\Models\Categorie;
 use Illuminate\Database\Eloquent\Collection;
 use Ry\Admin\Http\Controllers\AdminController as LanguageAdminController;
 use Auth, App;
+use Ry\Categories\Models\Categorizable;
 
 class AdminController extends Controller
 {
@@ -233,14 +234,21 @@ class AdminController extends Controller
 			}
 				
 			if (isset ( $a ["selected"] ) && $a ["selected"] == true) {
-				$cz = $this->categorizable->categories ()->where("categorie_id", "=", $p->id);
-				if(!$cz->exists()) {
-					Categorie::unguard();
-					$this->categorizable->categories ()->create ([
-							"categorie_id" => $p->id
-					]);
-					Categorie::reguard();
-				}
+			    if(isset($a['id']) && isset($a['categorizable']) && $a['categorizable']['id']!='') {
+			        $joint = Categorizable::find($a['categorizable']['id']);
+			        $joint->categorie_id = $a['id'];
+			        $joint->save();
+			    }
+			    else {
+			        $cz = $this->categorizable->categories ()->where("categorie_id", "=", $p->id);
+			        if(!$cz->exists()) {
+			            Categorie::unguard();
+			            $this->categorizable->categories ()->create ([
+			                "categorie_id" => $p->id
+			            ]);
+			            Categorie::reguard();
+			        }
+			    }
 			}
 			
 			if(!isset($a['children']))
