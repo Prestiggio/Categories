@@ -59,12 +59,14 @@ class AdminController extends Controller
 	}
 	
 	public function postCategories(Request $request) {
-		$this->manageCategories($request->all());
-		return ["status" => "ok", "redirect" => ""];
+		$results = $this->manageCategories($request->all());
+		return ["status" => "ok", "redirect" => "", "results" => $results];
 	}
 	
 	public function manageCategories($ar, $parent = null, $lang = null) {
 		$user = Auth::user ();
+		
+		$results = [];
 		
 		if (! $lang)
 			$lang = "fr";
@@ -86,6 +88,7 @@ class AdminController extends Controller
 				        $p->active = $a['active'];
 				    }
 				    $p->save();
+				    $results[] = $p;
 				    app(LanguageAdminController::class)->putTranslationById($p->translation_id, $a['term']['name'], $lang);
 				}
 			}
@@ -118,14 +121,17 @@ class AdminController extends Controller
 			}
 		
 			if(isset($a['children'])) {
-			    $this->manageCategories ($a ["children"], $p );
+			    $results = array_merge($results, $this->manageCategories ($a ["children"], $p ));
 			}
 			if($p) {
 			    $p->position = $index;
 			    $p->save();
+			    $results[] = $p;
 			}
 			$index++;
 		}
+		
+		return $results;
 	}
 	
 	public function attributeCategories($categorizable, $ar, $parent = null, $lang = "fr", $group = 1) {

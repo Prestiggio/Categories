@@ -5,7 +5,6 @@ use Baum\Node;
 use Ry\Medias\Models\Traits\MediableTrait;
 use Ry\Medias\Models\Media;
 use Illuminate\Support\Facades\Cache;
-use Ry\Admin\Models\LanguageTranslation;
 use Ry\Admin\Models\Translation;
 use App;
 use Ry\Admin\Http\Controllers\AdminController as LanguageTranslationController;
@@ -28,6 +27,8 @@ class Categorie extends Node {
 	protected $appends = ["selected", "term"];
 	
 	protected $orderColumn = 'position';
+	
+	public static $scope_enabled = false;
 	
 	private $type;
 	
@@ -141,6 +142,7 @@ class Categorie extends Node {
 	        $children = [];
 	        for($i=0;$i<$levels;$i++)
 	            $children[] = 'children';
+	        static::$scope_enabled = true;
 	        return static::whereNull("parent_id")->whereHas("group", function($q)use($groupname){
 	            $q->whereName($groupname);
 	        })->with([implode(".", $children)])->get();
