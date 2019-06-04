@@ -24,7 +24,7 @@ class Categorie extends Node {
 
 	protected $fillable = ["active", "multiple", "input"];
 
-	protected $appends = ["selected", "term"];
+	protected $appends = ["selected", "term", "ninput"];
 	
 	protected $orderColumn = 'position';
 	
@@ -74,10 +74,6 @@ class Categorie extends Node {
 	    
 	    static::addGlobalScope("positionOrder", function($q){
 	        $q->orderBy("position");
-	    });
-	    
-	    static::saved(function(Categorie $categorie){
-	        Cache::forget('rycategorygroup.'.$categorie->group->name);
 	    });
 	}
 	
@@ -137,8 +133,8 @@ class Categorie extends Node {
 		return false;
 	}
 	
-	public static function cacheGroup($groupname, $levels=2) {
-	    return Cache::rememberForever('rycategorygroup.'.$groupname, function()use($groupname, $levels){
+	public static function cacheGroup($groupname, $cache_suffix='', $levels=2) {
+	    return Cache::rememberForever('rycategorygroup.'.$groupname.'.'.$cache_suffix, function()use($groupname, $levels){
 	        $children = [];
 	        for($i=0;$i<$levels;$i++)
 	            $children[] = 'children';
@@ -184,5 +180,29 @@ class Categorie extends Node {
 	
 	public function getLinkAttribute() {
 	    return action("\Ry\Categories\Http\Controllers\PublicController@category", ["category" => $this->path]);
+	}
+	
+	public function getNinputAttribute() {
+	    if($this->input) {
+	        return json_decode($this->input, true);
+	    }
+	    return [];
+	}
+	
+	public function setNinputAttribute($ar) {
+	    static::unescape($ar);
+	    $this->input = json_encode($ar);
+	}
+	
+	public static function unescape($ar) {
+	    array_walk_recursive($ar, function(&$v, $k){
+	        if(!preg_match("/^0\d+/", $v))
+	            $v = is_numeric($v)?doubleval($v):$v;
+            if($v==='false')
+                $v = false;
+            if($v==='true')
+                $v = true;
+	    });
+	    return $ar;
 	}
 }

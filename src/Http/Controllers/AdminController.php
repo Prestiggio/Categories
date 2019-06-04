@@ -3,12 +3,14 @@ namespace Ry\Categories\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Ry\Categories\Models\Categorygroup;
 use Ry\Categories\Models\Categorie;
 use Illuminate\Database\Eloquent\Collection;
 use Ry\Admin\Http\Controllers\AdminController as LanguageAdminController;
 use Auth, App;
 use Ry\Categories\Models\Categorizable;
+use Ry\Admin\Models\LanguageTranslation;
 
 class AdminController extends Controller
 {
@@ -64,6 +66,8 @@ class AdminController extends Controller
 	}
 	
 	public function manageCategories($ar, $parent = null, $lang = null) {
+	    LanguageTranslation::$exportOnSave = false;
+	    
 		$user = Auth::user ();
 		
 		$results = [];
@@ -72,10 +76,11 @@ class AdminController extends Controller
 			$lang = "fr";
 		
 		$index = 0;
+		
 		foreach ( $ar as $a ) {
-			if ((isset ( $a ["deleted"] ) && $a ["deleted"] == true) || (isset ( $a ["selected"] ) && $a ["selected"] == false)) {
+			if (isset ( $a ["deleted"] ) && $a ["deleted"] == true) {
 				if (isset ( $a ["id"] )) {
-					Categorie::where("id", "=", $a ["id"] )->first()->delete();
+					Categorie::find($a["id"])->delete();
 				}
 				continue;
 			}
@@ -102,7 +107,7 @@ class AdminController extends Controller
 					    "position" => $index,
 					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-					    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
+					    "input" => json_encode(isset($a["ninput"]) ? Categorie::unescape($a["ninput"]) : ["type" => "text"])
 					] );
 					$p->makeChildOf ( $parent );
 				}
@@ -113,7 +118,7 @@ class AdminController extends Controller
 					    "position" => $index,
 					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-					    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
+					    "input" => json_encode(isset($a["ninput"]) ? Categorie::unescape($a["ninput"]) : ["type" => "text"])
 					] );
 				}
 				$p->save ();
@@ -160,7 +165,7 @@ class AdminController extends Controller
 							    "position" => $index,
 							    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 							    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-							    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
+							    "input" => json_encode(isset($a["ninput"]) ? Categorie::unescape($a["ninput"]) : ["type" => "text"])
 							] );
 							$p->makeChildOf ( $parent );
 						}
@@ -171,7 +176,7 @@ class AdminController extends Controller
 							    "position" => $index,
 							    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 							    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-							    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
+							    "input" => json_encode(isset($a["ninput"]) ? Categorie::unescape($a["ninput"]) : ["type" => "text"])
 							] );
 						}
 						$p->save ();
@@ -188,7 +193,7 @@ class AdminController extends Controller
 						    "position" => $index,
 						    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 						    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-						    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
+						    "input" => json_encode(isset($a["ninput"]) ? Categorie::unescape($a["ninput"]) : ["type" => "text"])
 						] );
 						$p->makeChildOf ( $parent );
 					}
@@ -199,7 +204,7 @@ class AdminController extends Controller
 						    "position" => $index,
 						    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 						    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-						    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
+						    "input" => json_encode(isset($a["ninput"]) ? Categorie::unescape($a["ninput"]) : ["type" => "text"])
 						] );
 					}
 					$p->save ();
@@ -221,7 +226,7 @@ class AdminController extends Controller
 					    "position" => $index,
 					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-					    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
+					    "input" => json_encode(isset($a["ninput"]) ? Categorie::unescape($a["ninput"]) : ["type" => "text"])
 					] );
 					$p->makeChildOf ( $parent );
 				}
@@ -232,7 +237,7 @@ class AdminController extends Controller
 					    "position" => $index,
 					    "translation_id" => app(LanguageAdminController::class)->postTranslation($a ["term"] ["name"], $lang)->id,
 					    "path_translation_id" => app(LanguageAdminController::class)->putTranslation("path.".str_slug($a ["term"] ["name"], '_', $lang), $a ["term"] ["name"], $lang)->id,
-					    "input" => json_encode(isset($a["input"]) ? $a["input"] : ["type" => "text"])
+					    "input" => json_encode(isset($a["ninput"]) ? Categorie::unescape($a["ninput"]) : ["type" => "text"])
 					] );
 				}
 				$p->save ();
