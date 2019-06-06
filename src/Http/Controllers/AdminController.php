@@ -80,7 +80,7 @@ class AdminController extends Controller
 		foreach ( $ar as $a ) {
 			if (isset ( $a ["deleted"] ) && $a ["deleted"] == true) {
 				if (isset ( $a ["id"] )) {
-					Categorie::find($a["id"])->delete();
+					Categorie::where('id', '=', $a["id"])->delete();
 				}
 				continue;
 			}
