@@ -2,14 +2,17 @@
 namespace Ry\Categories\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Ry\Admin\Models\Traits\HasJsonSetup;
 
 class Categorizable extends Model
 {
+    use HasJsonSetup;
+    
 	protected $table = "ry_categories_categorizables";
 	
-	protected $fillable = ["categorie_id", "main"];
+	protected $fillable = ["categorie_id", "main", "setup"];
 	
-	protected $visible = ["id", "category", "main"];
+	protected $hidden = ["setup"];
 	
 	//protected $with = ["category"];
 	

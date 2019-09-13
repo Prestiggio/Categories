@@ -14,6 +14,7 @@ class RyCategoriesCategoriesHasmain extends Migration
     {
         Schema::table('ry_categories_categorizables', function (Blueprint $table) {
             $table->boolean("main")->nullable()->after("categorizable_id");
+            $table->json('setup')->nullable()->after('main');
         });
     }
 

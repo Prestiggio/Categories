@@ -245,9 +245,11 @@ class AdminController extends Controller
 			}
 				
 			if (isset ( $a ["selected"] ) && $a ["selected"] == true) {
-			    if(isset($a['id']) && isset($a['categorizable']) && $a['categorizable']['id']!='') {
+			    if(isset($a['id']) && isset($a['categorizable']) && isset($a['categorizable']['id']) && $a['categorizable']['id']!='') {
 			        $joint = Categorizable::find($a['categorizable']['id']);
 			        $joint->categorie_id = $a['id'];
+			        if(isset($a['categorizable']['setup']))
+			             $joint->nsetup = $a['categorizable']['setup'];
 			        $joint->save();
 			    }
 			    else {
@@ -255,7 +257,8 @@ class AdminController extends Controller
 			        if(!$cz->exists()) {
 			            Categorie::unguard();
 			            $this->categorizable->categories ()->create ([
-			                "categorie_id" => $p->id
+			                "categorie_id" => $p->id,
+			                "setup" => isset($a['categorizable']['setup']) ? json_encode($a['categorizable']['setup']) : null
 			            ]);
 			            Categorie::reguard();
 			        }
