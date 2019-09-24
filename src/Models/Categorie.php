@@ -53,6 +53,8 @@ class Categorie extends Node {
 	
 	protected $with = ["translation"];
 	
+	private $_selected = false;
+	
 	// ////////////////////////////////////////////////////////////////////////////
 	
 	//
@@ -130,7 +132,11 @@ class Categorie extends Node {
 	}
 
 	public function getSelectedAttribute() {
-		return false;
+		return $this->_selected;
+	}
+	
+	public function setSelectedAttribute($selected) {
+	    $this->_selected = $selected;
 	}
 	
 	public static function cacheGroup($groupname, $cache_suffix='', $levels=2) {
@@ -141,8 +147,22 @@ class Categorie extends Node {
 	        static::$scope_enabled = true;
 	        return static::whereNull("parent_id")->whereHas("group", function($q)use($groupname){
 	            $q->whereName($groupname);
-	        })->with([implode(".", $children)])->get();
+	        })->with([implode(".", $children)])->get()->sort(function($item){
+	            return $item->term->name;
+	        });
 	    });
+	}
+	
+	public static function attributeByIds($tree, $ids, $attrs) {
+	    foreach ($tree as $item) {
+	        if(in_array($item->id, $ids)) {
+	            foreach($attrs as $k=>$v) {
+	                $item->setAttribute($k, $v);
+	            }
+	        }
+	        static::attributeByIds($item->children, $ids, $attrs);
+	    }
+	    return $tree;
 	}
 	
 	public function getPathAttribute() {
