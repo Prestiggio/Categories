@@ -153,14 +153,24 @@ class Categorie extends Node {
 	    });
 	}
 	
-	public static function attributeByIds($tree, $ids, $attrs) {
-	    foreach ($tree as $item) {
+	public static function attributeByIds(&$tree, $ids, $attrs) {
+	    foreach ($tree as &$item) {
 	        if(in_array($item->id, $ids)) {
 	            foreach($attrs as $k=>$v) {
 	                $item->setAttribute($k, $v);
 	            }
 	        }
 	        static::attributeByIds($item->children, $ids, $attrs);
+	    }
+	    return $tree;
+	}
+	
+	public static function attributeAll(&$tree, $attrs) {
+	    foreach ($tree as &$item) {
+            foreach($attrs as $k=>$v) {
+                $item->setAttribute($k, $v);
+            }
+	        static::attributeAll($item->children, $attrs);
 	    }
 	    return $tree;
 	}
