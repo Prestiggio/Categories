@@ -20,7 +20,20 @@ class RyCategorie
 	
 	public function termName(Categorie $categorie) {
 	    if(!isset($this->translations[$categorie->id])) {
-	        $this->translations[$categorie->id] = LanguageTranslation::join("ry_categories_categories", "ry_categories_categories.translation_id", "=", "ry_admin_language_translations.translation_id")->whereLang(App::getLocale())->where('ry_categories_categories.id', '=', $categorie->id)->first()->translation_string;
+	        $translations = LanguageTranslation::join("ry_categories_categories", "ry_categories_categories.translation_id", "=", "ry_admin_language_translations.translation_id")->where('ry_categories_categories.id', '=', $categorie->id)->select('translation_string')->get();
+	        $found = false;
+	        $alts = [];
+	        foreach($translations as $translation) {
+	            $alts[] = $translation->translation_string;
+	            if($translation->lang==App::getLocale()) {
+	                $found = true;
+	                $this->translations[$categorie->id] = $translation->translation_string;
+	                break;
+	            }
+	        }
+	        if(!$found && count($alts)>0) {
+	            $this->translations[$categorie->id] = $alts[0];
+	        }
 	    }
 	    return $this->translations[$categorie->id];
 	}
