@@ -34,6 +34,9 @@ class RyCategorie
 	        if(!$found && count($alts)>0) {
 	            $this->translations[$categorie->id] = $alts[0];
 	        }
+	        if(!isset($this->translations[$categorie->id])) {
+	            $this->translations[$categorie->id] = '';
+	        }
 	    }
 	    return $this->translations[$categorie->id];
 	}

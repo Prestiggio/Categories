@@ -153,6 +153,10 @@ class Categorie extends Node {
 	    });
 	}
 	
+	public static function forgetGroup($groupname, $cache_suffix='') {
+	    return Cache::forget('rycategorygroup.'.$groupname.'.'.$cache_suffix);
+	}
+	
 	public static function attributeByIds(&$tree, $ids, $attrs) {
 	    foreach ($tree as &$item) {
 	        if(in_array($item->id, $ids)) {
