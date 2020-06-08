@@ -252,7 +252,7 @@ class AdminController extends Controller
 			             $joint->nsetup = $a['categorizable']['setup'];
 			        $joint->save();
 			    }
-			    else {
+			    elseif($p) {
 			        $cz = $this->categorizable->categories ()->where("categorie_id", "=", $p->id);
 			        if(!$cz->exists()) {
 			            Categorie::unguard();
@@ -267,7 +267,8 @@ class AdminController extends Controller
 			
 			if(!isset($a['children']))
 			    $a['children'] = [];
-			$this->attributeCategories ($this->categorizable,  $a ["children"], $p );
+			if($p)
+			    $this->attributeCategories ($this->categorizable,  $a ["children"], $p );
 			$index++;
 		}
 	}
