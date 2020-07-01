@@ -30,6 +30,8 @@ class Categorie extends Node {
 	
 	public static $scope_enabled = false;
 	
+	private static $cache = [];
+	
 	private $type;
 	
 	// protected $orderColumn = null;
