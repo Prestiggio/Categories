@@ -9,8 +9,7 @@
         }
     ],
     "require": {
-    	"mcamara/laravel-localization": "*",
-    	"baum/baum": "*"
+    	"mcamara/laravel-localization": "*"
     },
     "autoload": {
         "psr-4": {

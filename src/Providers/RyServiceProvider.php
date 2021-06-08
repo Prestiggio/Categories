@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 
 use Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider;
-use Baum\Providers\BaumServiceProvider;
+use Baum\BaumServiceProvider;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Ry\Categories\Models\Categorie;
 use Ry\Categories\Console\Commands\Categorie as CategorieCommand;
