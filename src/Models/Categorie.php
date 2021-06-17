@@ -1,7 +1,7 @@
 <?php
 namespace Ry\Categories\Models;
 
-use Baum\NestedSet\Node;
+use Baum\Node;
 use Ry\Medias\Models\Traits\MediableTrait;
 use Ry\Medias\Models\Media;
 use Illuminate\Support\Facades\Cache;
