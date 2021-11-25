@@ -1,15 +1,16 @@
 <?php
 namespace Ry\Categories\Models;
 
-use Baum\Node;
+//use Baum\Node;
 use Ry\Medias\Models\Traits\MediableTrait;
 use Ry\Medias\Models\Media;
 use Illuminate\Support\Facades\Cache;
 use Ry\Admin\Models\Translation;
 use App;
+use Illuminate\Database\Eloquent\Model;
 use Ry\Admin\Http\Controllers\AdminController as LanguageTranslationController;
 
-class Categorie extends Node {
+class Categorie extends Model {
 	
 	use MediableTrait;
 	

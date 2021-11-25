@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 
 use Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider;
-use Baum\BaumServiceProvider;
+//use Baum\BaumServiceProvider;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Ry\Categories\Models\Categorie;
 use Ry\Categories\Console\Commands\Categorie as CategorieCommand;
@@ -73,7 +73,7 @@ class RyServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(LaravelLocalizationServiceProvider::class);     
-        $this->app->register(BaumServiceProvider::class);
+        //$this->app->register(BaumServiceProvider::class);
         
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('LaravelLocalization', LaravelLocalization::class);
