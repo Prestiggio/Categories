@@ -1,7 +1,7 @@
 {
-    "name": "ry/categories",
+    "name": "prestiggio/categories",
     "description": "categorizable items",
-    "type": "php, laravel 5",
+    "type": "laravel",
     "authors": [
         {
             "name": "Landr Kotoarivelo",
